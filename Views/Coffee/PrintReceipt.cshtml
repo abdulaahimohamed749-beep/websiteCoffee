@@ -1,0 +1,116 @@
+﻿@model websiteCoffee.Models.Coffee.OrderViewModel
+
+@{
+    ViewData["Title"] = "Print Receipt";
+    // Hubi in wadarta guud si sax ah loo xisaabiyey kahor intaan la muujin
+    decimal totalAmount = Model.SelectedItems.Sum(item => item.Price * item.Quantity);
+}
+
+<div class="container mt-5 mb-5 d-flex flex-column align-items-center">
+
+    <div class="d-flex gap-2 mb-3 w-100 d-print-none" style="max-width: 450px;">
+        <a asp-action="OrderPage" class="btn btn-outline-dark rounded-3 px-3 py-2 flex-grow-1 fw-bold">
+            <i class="fas fa-arrow-left me-2"></i> Ku laabo Menu-ga
+        </a>
+        <button onclick="window.print();" class="btn btn-success rounded-3 px-4 py-2 flex-grow-1 fw-bold shadow-sm">
+            <i class="fas fa-print me-2"></i> Daabac Rasiidka
+        </button>
+    </div>
+
+    <div class="card p-4 border border-dark rounded-0 bg-white shadow-sm" style="max-width: 450px; width: 100%;" id="receiptSection">
+
+        <div class="text-center mb-4">
+            <h2 class="fw-black m-0 tracking-wide" style="color: #2b1810; font-family: 'Courier New', Courier, monospace; font-weight: 900;">WEBSITE COFFEE</h2>
+            <div class="small text-uppercase fw-bold text-secondary mt-1" style="font-size: 0.75rem;">Premium Cafeteria Experience</div>
+            <div class="small text-dark mt-2">
+                <i class="fas fa-map-marker-alt me-1 text-danger"></i> Bosaso, Somalia <br>
+                <i class="fas fa-university me-1 text-primary"></i> A/C Golis: <span class="fw-bold">506065</span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center my-3 text-muted small px-1 border-top border-bottom border-secondary py-1">
+                <span>Taariikhda: @Model.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                <span>Inv: #WC-@Random.Shared.Next(1000, 9999)</span>
+            </div>
+
+            <h6 class="fw-bold tracking-widest text-uppercase text-dark bg-light py-2 border rounded">
+                Rasiidka Dalabka <span class="d-block small text-muted text-lowercase" style="font-size: 0.7rem;">Order Receipt</span>
+            </h6>
+        </div>
+
+        <table class="table table-borderless table-sm small align-middle">
+            <thead>
+                <tr class="border-bottom border-dark text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">
+                    <th>Alaabta <br><span class="text-muted text-lowercase" style="font-size: 0.65rem;">Item</span></th>
+                    <th class="text-center">Tirada <br><span class="text-muted text-lowercase" style="font-size: 0.65rem;">Qty</span></th>
+                    <th class="text-end">Qiimaha <br><span class="text-muted text-lowercase" style="font-size: 0.65rem;">Price</span></th>
+                    <th class="text-end">Wadar <br><span class="text-muted text-lowercase" style="font-size: 0.65rem;">Total</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SelectedItems)
+                {
+                    <tr class="border-bottom border-light text-dark">
+                        <td class="fw-bold py-2" style="font-size: 0.9rem;">@item.Name</td>
+                        <td class="text-center fw-bold">@item.Quantity</td>
+                        <td class="text-end">$@item.Price.ToString("0.00")</td>
+                        <td class="text-end fw-bold">$@((item.Price * item.Quantity).ToString("0.00"))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="border-top border-dashed border-dark my-3" style="border-style: dashed !important; border-width: 2px 0 0 0 !important;"></div>
+
+        <div class="p-2 bg-light rounded border">
+            <div class="d-flex justify-content-between align-items-center fw-bold px-1">
+                <span class="text-dark" style="font-size: 0.9rem;">WADARTA GUUD:<br><span class="text-muted small text-lowercase" style="font-size: 0.7rem; font-weight: normal;">total amount</span></span>
+                <span class="fs-4 text-success font-monospace">$@totalAmount.ToString("0.00")</span>
+            </div>
+        </div>
+
+        <div class="text-center mt-5 pt-2 border-top border-light">
+            <p class="small text-dark fw-bold mb-1">Waad ku mahadsantahay booqashadaada!</p>
+            <p class="small text-muted mb-3" style="font-size: 0.8rem;">Thank you for your visit. Please come again.</p>
+
+            <div class="text-muted small font-monospace tracking-widest" style="font-size: 0.65rem; letter-spacing: 4px;">
+                Macamiil aad umahadsan tahay soo laabasho wacan
+            </div>
+            <small class="text-muted font-monospace d-block mt-1" style="font-size: 0.6rem;">Powered by websiteCoffee System</small>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-dashed {
+        border-top: 2px dashed #000 !important;
+    }
+
+    @@media print {
+        /* Qari dhamaan boggaga kale iyo badhamada */
+        body * {
+            visibility: hidden;
+            background: transparent !important;
+        }
+        /* Muuji kaliya rasiidka dhexdiisa */
+        #receiptSection, #receiptSection * {
+            visibility: visible;
+        }
+
+        #receiptSection {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 100% !important;
+            max-width: 100% !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        /* Qari badhamada d-print-none si dhab ah */
+        .d-print-none {
+            display: none !important;
+        }
+    }
+</style>

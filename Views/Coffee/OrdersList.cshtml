@@ -1,0 +1,81 @@
+﻿@model List<websiteCoffee.Models.Coffee.OrderViewModel>
+
+@{
+    ViewData["Title"] = "Paid Orders List";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-dark fw-bold"><i class="fas fa-receipt text-warning me-2"></i> Macaamiisha Dalabka Jaray (Paid Orders)</h2>
+        <a asp-action="OrderPage" class="btn btn-outline-dark rounded-pill px-4">
+            <i class="fas fa-plus me-1"></i> New Order
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center py-4 border-0 shadow-sm rounded-3">
+            <i class="fas fa-info-circle fs-3 mb-2 d-block"></i>
+            <span class="fw-bold">Waqtigan xaadirka ah ma jiraan wax dalabaad ah oo la bixiyey!</span>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var order = Model[i];
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100 rounded-3" id="print-area-@i" style="background-color: #fff;">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+                            <span class="fw-bold"><i class="fas fa-hashtag me-1 text-warning"></i> Order ID: #100@(i)</span>
+                            <span class="badge bg-success rounded-pill px-3 py-2">Paid</span>
+                        </div>
+                        <div class="card-body p-4">
+                            <h6 class="text-muted fw-bold mb-3"><i class="fas fa-mug-hot me-1 text-secondary"></i> Items Ordered:</h6>
+                            <ul class="list-group list-group-flush mb-3">
+                                @foreach (var item in order.SelectedItems)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent text-dark">
+                                        <div>
+                                            <span class="fw-bold">@item.Name</span>
+                                            <small class="text-muted d-block">@item.Quantity x $@item.Price.ToString("0.00")</small>
+                                        </div>
+                                        <span class="badge bg-secondary rounded-pill">$@((item.Price * item.Quantity).ToString("0.00"))</span>
+                                    </li>
+                                }
+                            </ul>
+                            <hr class="text-muted">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="fs-5 fw-bold text-dark">Total Paid:</span>
+                                <span class="fs-4 fw-bold text-success">$@order.SelectedItems.Sum(x => x.Price * x.Quantity).ToString("0.00")</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
+                            <button onclick="printSingleOrder('print-area-@i')" class="btn btn-sm btn-dark w-100 rounded-pill py-2 shadow-sm">
+                                <i class="fas fa-print me-1"></i> Print Receipt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@* <script>
+    function printSingleOrder(divId) {
+        var printContents = document.getElementById(divId).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        // Waxaan ku dhex fureynaa bog cusub oo nadiif ah si risidka oo qura u print-gariro
+        document.body.innerHTML = "<html><head><title>Print Receipt</title><link rel='stylesheet' href='/lib/bootstrap/dist/css/bootstrap.min.css'></head><body style='padding:40px; text-align:center;'>" + printContents + "</body></html>";
+
+        // Sifada dhalisa daabacaadda printer-ka
+        window.print();
+
+        // Bogga sidiisii hore dib ugu soo celi
+        document.body.innerHTML = originalContents;
+        window.location.reload(); // Dib u cusbooneysii bogga
+    }
+</script> *@

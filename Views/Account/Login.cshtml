@@ -1,0 +1,165 @@
+﻿@model websiteCofee.Models.LoginViewModel
+
+@{
+    Layout = null; // Maadaama uu yahay bog gooni ah oo Login ah
+}
+
+<!DOCTYPE html>
+<html lang="so">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - websiteCofee</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* 1. BACKGROUND-KA WEYN: Ma jiro wax sawir ah, waa midab gradient qaxwo madow ah oo aad u bilicsan */
+            background: linear-gradient(135deg, #1f140e 0%, #0f0a07 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .login-container {
+            /* 2. BACKGROUND-KA SANDUUQA YAR: Halkaan ayuu sawirkaaga galayaa (wwwroot/image/login-bg.jpg) */
+            background-image: url('/image/cof.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 50px 40px;
+            width: 450px;
+            text-align: center;
+            border-radius: 24px;
+            position: relative;
+            /* 3. FRAME QURUX BADAN (Border leh iftin dhex-dhaaf ah) */
+            border: 2px solid #e67e22; /* Midabka dahabiga qaxwada */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 15px rgba(230, 126, 34, 0.2); /* Iftin yar oo qurxinaya darafyada */
+            /* Tani waxay hubinaysaa in wax kasta oo gudaha ah ay si fiican u muuqdaan mar kasta */
+            overflow: hidden;
+        }
+
+            /* Lakab madow oo khafiif ah oo saaran sawirka container-ka dhexdiisa si qoraalka loo akhristo */
+            .login-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.45); /* Waxaad u badali kartaa 0 haddii aad rabto sawirka inuu si saafi ah u ifo */
+                z-index: 1;
+            }
+
+            /* Wax kasta oo gudaha ku jira waa inay ka sarreeyaan lakabka madow */
+            .login-container * {
+                position: relative;
+                z-index: 2;
+            }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: 500;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.95); /* Cadaan nadiif ah oo sanduuqa qoraalka ah */
+            color: #000000;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus {
+                background: #ffffff;
+                border-color: #e67e22;
+                box-shadow: 0 0 10px rgba(230, 126, 34, 0.5);
+            }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background-color: #e67e22; /* Midabka qaxwada ee badanka */
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: background 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+            .btn-login:hover {
+                background-color: #d35400;
+            }
+
+        .text-danger {
+            color: #ff4d4d;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+
+        <h2>Log in</h2>
+
+        <form asp-action="Login" asp-controller="Account" method="post">
+
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Enter Email" autocomplete="off" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-login">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Log in
+            </button>
+        </form>
+    </div>
+
+</body>
+</html>

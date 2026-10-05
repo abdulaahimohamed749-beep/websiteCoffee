@@ -1,0 +1,103 @@
+﻿@model websiteCoffee.Models.Coffee.OrderViewModel
+
+@{
+    ViewData["Title"] = "Order Menu";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold tracking-wide" style="color: #2b1810; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+            <i class="fas fa-mug-hot text-warning me-2"></i> COFFEE SHOP MENU
+        </h1>
+        <p class="text-muted fw-bold">Dooro coffee aad jeceshahay adoo mahadsan .</p>
+        <hr class="mx-auto" style="width: 100px; height: 3px; background-color: #c5a880; border: none;">
+    </div>
+
+    <form asp-action="PrintReceipt" method="post">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @for (int i = 0; i < Model.AvailableCoffees.Count; i++)
+            {
+                var coffee = Model.AvailableCoffees[i];
+                <div class="col">
+                    <div class="card h-100 shadow border-0 rounded-3 overflow-hidden bg-white position-relative hover-shadow transition-all">
+
+                        <img src="~/images/@coffee.ImageUrl" class="card-img-top" alt="@coffee.Name" style="height: 200px; object-fit: cover;">
+
+                        <div class="card-body d-flex flex-column justify-content-between p-4">
+                            <div>
+                                <h5 class="card-title fw-bold text-dark m-0" style="font-size: 1.15rem;">@coffee.Name</h5>
+                            </div>
+
+                            <div class="mt-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-secondary small fw-bold">Qiimaha / Price:</span>
+                                    <span class="text-success fw-bold fs-5 font-monospace">$@coffee.Price.ToString("0.00")</span>
+                                </div>
+
+                                <input type="hidden" name="coffeeIds" value="@coffee.Id" />
+
+                                <div class="input-group input-group-sm border rounded-pill overflow-hidden shadow-sm bg-light">
+                                    <button class="btn btn-link text-dark px-3 text-decoration-none border-0 fw-bold" type="button" onclick="decrementQty(this)">
+                                        <i class="fas fa-minus small"></i>
+                                    </button>
+
+                                    <input type="number" name="quantities" class="form-control text-center fw-bold border-0 bg-transparent text-dark qty-input" value="0" min="0" readonly />
+
+                                    <button class="btn btn-link text-dark px-3 text-decoration-none border-0 fw-bold" type="button" onclick="incrementQty(this)">
+                                        <i class="fas fa-plus small"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="text-center my-5 pt-3">
+            <button type="submit" class="btn btn-lg text-dark px-5 py-3 shadow border-0 rounded-pill fw-bold transition-all btn-submit-order" style="background-color: #c5a880; font-size: 1.1rem;">
+                <i class="fas fa-file-invoice-dollar me-2"></i> Diyaari Rasiidka & Daabac (Print)
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function incrementQty(button) {
+        var input = button.parentNode.querySelector('.qty-input');
+        var value = parseInt(input.value, 10);
+        input.value = isNaN(value) ? 1 : value + 1;
+    }
+
+    function decrementQty(button) {
+        var input = button.parentNode.querySelector('.qty-input');
+        var value = parseInt(input.value, 10);
+        if (!isNaN(value) && value > 0) {
+            input.value = value - 1;
+        }
+    }
+</script>
+
+<style>
+    .hover-shadow {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12) !important;
+        }
+
+    .btn-submit-order:hover {
+        background-color: #bfa075 !important;
+        transform: scale(1.03);
+        box-shadow: 0 8px 25px rgba(197, 168, 128, 0.4) !important;
+    }
+
+    /* Qari fallaaraha caadiga ah ee input-ka number-ka */
+    .qty-input::-webkit-outer-spin-button,
+    .qty-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>

@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - websiteCoffee</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- FontAwesome Icons loogu talagalay Naqshadda -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/websiteCofee.styles.css" asp-append-version="true" />
+
+    <style>
+        /* 1. Global Background Image - Sawir Qaxwo ah oo deggen */
+        body {
+            background-image: linear-gradient(rgba(252, 249, 245, 0.93), rgba(252, 249, 245, 0.93)), url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1920');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* 2. Premium Navbar Styling */
+        .custom-navbar {
+            background: linear-gradient(135deg, #2b1810 0%, #170d08 100%) !important;
+            border-bottom: 3px solid #c5a880;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+        }
+
+        .navbar-brand {
+            color: #c5a880 !important;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+            .navbar-brand span {
+                color: #ffffff;
+            }
+
+        .nav-link {
+            color: #e6e6e6 !important;
+            font-weight: 600;
+            padding: 8px 18px !important;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+            .nav-link:hover {
+                background-color: rgba(197, 168, 128, 0.2);
+                color: #c5a880 !important;
+                transform: translateY(-1px);
+            }
+
+        /* 3. Top Video Section */
+        .video-header-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            margin-bottom: 2.5rem;
+            background-color: #000;
+        }
+
+            .video-header-container video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .main-container {
+            flex: 1;
+        }
+
+        .custom-footer {
+            background-color: #170d08;
+            color: #a29188 !important;
+            border-top: 3px solid #c5a880;
+        }
+
+        /* QR Image Frame */
+        .qr-image-box {
+            border: 4px dashed #c5a880;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #fff;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- NAVIGATION BAR -->
+        <nav class="navbar navbar-expand-lg navbar-dark custom-navbar mb-4">
+            <div class="container px-4">
+                <!-- Logo -->
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Coffee" asp-action="OrderPage">
+                    <i class="fas fa-coffee me-2 text-warning"></i> <span>website</span>Coffee
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Coffee" asp-action="OrderPage">
+                                <i class="fas fa-store me-1 text-warning"></i> Order Menu
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Coffee" asp-action="Index">
+                                <i class="fas fa-layer-group me-1 text-info"></i> Products Dashboard
+                            </a>
+                        </li>
+                        <!-- HALKAN HOOSE WAA BADHANKA DALABAADKA LA JARAY EE AAD CODSETAY -->
+                        <li class="nav-item">
+                            <a class="nav-link text-info" asp-controller="Coffee" asp-action="OrdersList">
+                                <i class="fas fa-receipt me-1"></i> View Paid Orders
+                            </a>
+                        </li>
+                        <!-- Badhanka Scan-ka: Marka la riixo sawirka QR ayaa soo baxaya -->
+                        <li class="nav-item">
+                            <a class="nav-link text-warning fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#scanModal">
+                                <i class="fas fa-qrcode me-1 text-success"></i> Show Table QR
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Right Side -->
+                    <div class="d-flex align-items-center gap-3">
+                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">
+                            <i class="fas fa-user-circle me-1"></i> Login
+                        </a>
+                        <a asp-controller="Coffee" asp-action="Create" class="btn btn-sm px-4 py-2 text-dark fw-bold rounded-pill shadow" style="background-color: #c5a880;">
+                            <i class="fas fa-plus-circle me-1"></i> Add Coffee
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ⬇️ VIDEO SECTION (KORKA PRODUCTS-KA) ⬇️ -->
+    @if (ViewContext.RouteData.Values["action"]?.ToString() == "OrderPage" || ViewContext.RouteData.Values["action"]?.ToString() == "Index")
+    {
+        <div class="container">
+            <div class="video-header-container">
+                <video autoplay loop muted controls playsinline>
+                    <source src="/video/Mycoffee.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    }
+
+    <!-- ⬇️ PRODUCTS MAIN BODY CONTENT ⬇️ -->
+    <div class="container main-container">
+        <main role="main" class="pb-5">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- ⬇️ MODAL-KA SAWIRKA QR CODE-KA (Macmiilka/Waiter-ku moobilka ayuu ku sawiranayaa si toos ah) ⬇️ -->
+    <div class="modal fade" id="scanModal" tabindex="-1" aria-labelledby="scanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold" id="scanModalLabel"><i class="fas fa-mobile-alt me-2 text-warning"></i> Scan to Order</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center bg-light py-4">
+                    <p class="text-dark fw-bold mb-3">Ku scan-garee Moobilkaaga QR-kan si uu kuugu geeyo Products-ka si aad dalabka u goysid!</p>
+
+                    <div class="qr-image-box shadow-sm mb-3">
+                        <!-- Marka moobilka lagu dhufto wuxuu si toos ah u geynayaa /Coffee/OrderPage -->
+                        <img src="/image/scan.jpeg" alt="Scan to Order Products" class="img-fluid" style="max-width: 220px;" />
+                    </div>
+
+                    <div class="mt-2">
+                        <a asp-controller="Coffee" asp-action="OrderPage" class="btn btn-sm btn-dark rounded-pill px-4">
+                            <i class="fas fa-arrow-right me-1"></i> Go to Products Page
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="custom-footer py-4 mt-auto">
+        <div class="container text-center text-md-start d-md-flex justify-content-between align-items-center">
+            <div class="mb-2 mb-md-0">
+                &copy; 2026 - <span class="text-white fw-bold">websiteCoffee</span> - All Rights Reserved.
+            </div>
+            <div class="fs-5">
+                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="me-4 small">Privacy Policy</a>
+                <a href="#" class="text-white-50 me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white-50 me-3"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
